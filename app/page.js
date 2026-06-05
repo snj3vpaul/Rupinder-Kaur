@@ -1,5 +1,7 @@
 import { Icon } from "@/components/Icons";
-import Reveal from "@/components/Reveal";
+import Effects from "@/components/Effects";
+import Typewriter from "@/components/Typewriter";
+import Gallery from "@/components/Gallery";
 import {
   profile,
   links,
@@ -10,14 +12,18 @@ import {
   projects,
   certifications,
   education,
+  learning,
+  languages,
+  recipes,
 } from "@/data/content";
 
 export default function Home() {
   const hasLinks = links.email || links.linkedin || links.github || links.resume;
+  const mottoWords = profile.motto.split(" ");
 
   return (
     <>
-      <Reveal />
+      <Effects />
 
       {/* NAV */}
       <nav className="nav">
@@ -26,6 +32,7 @@ export default function Home() {
         </a>
         <div className="nav-links">
           <a href="#about">About</a>
+          <a href="#kitchen">Kitchen</a>
           <a href="#skills">Skills</a>
           <a href="#experience">Experience</a>
           <a href="#work">Work</a>
@@ -35,10 +42,12 @@ export default function Home() {
 
       {/* HERO */}
       <header id="top" className="hero">
-        <div className="hero-mesh" />
+        <div className="hero-mesh">
+          <span className="b1" /><span className="b2" /><span className="b3" />
+        </div>
         <div className="wrap hero-grid">
           <div className="hero-copy">
-            <p className="hero-tag reveal">{profile.role} — {profile.location}</p>
+            <Typewriter words={profile.roles} />
             <h1 className="reveal d1">
               {profile.name.split(" ")[0]}
               <br />
@@ -84,6 +93,14 @@ export default function Home() {
               {about.body.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
+              <div className="langs">
+                {languages.map((l) => (
+                  <div className="lang" key={l.name}>
+                    <b>{l.name}</b>
+                    <span>{l.level}</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="hobby-list">
               {hobbies.map((h, i) => (
@@ -102,6 +119,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/* MOTTO BAND */}
+      <div className="motto">
+        <div className="wrap">
+          <p className="quote">
+            <span className="mark">“</span>
+            {mottoWords.map((w, i) => (
+              <span
+                className="word"
+                key={i}
+                style={{ transitionDelay: `${i * 0.06}s` }}
+              >
+                {w}&nbsp;
+              </span>
+            ))}
+            <span className="mark">”</span>
+          </p>
+        </div>
+      </div>
+
+      {/* KITCHEN / RECIPE GALLERY */}
+      <section id="kitchen" className="kitchen">
+        <div className="wrap">
+          <span className="eyebrow reveal">Off the clock</span>
+          <h2 className="section-title reveal d1">
+            In the <em>kitchen</em>
+          </h2>
+          <p className="kitchen-intro reveal d2">
+            Cooking is my favourite kind of engineering — balancing flavours the
+            way I balance test coverage. Here&apos;s a taste of my Indo-Chinese-Italian
+            fusion. <span className="mono">(tap a dish)</span>
+          </p>
+          <Gallery recipes={recipes} />
+        </div>
+      </section>
+
       {/* SKILLS */}
       <section id="skills" className="skills">
         <div className="wrap">
@@ -111,7 +163,7 @@ export default function Home() {
           </h2>
           <div className="skills-grid">
             {skills.map((s, i) => (
-              <div className={`skill-card reveal d${(i % 4) + 1}`} key={s.group}>
+              <div className={`skill-card tilt reveal d${(i % 4) + 1}`} key={s.group}>
                 <h3>{s.group}</h3>
                 <div className="tags">
                   {s.items.map((it) => (
@@ -120,6 +172,15 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="learning reveal d2">
+            <span className="label"><span className="pulse" /> Currently exploring</span>
+            <div className="items">
+              {learning.map((l) => (
+                <span key={l}>{l}</span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -166,7 +227,7 @@ export default function Home() {
           </h2>
           <div className="proj-grid">
             {projects.map((p, i) => (
-              <div className={`proj-card reveal d${(i % 4) + 1}`} key={p.title}>
+              <div className={`proj-card tilt reveal d${(i % 4) + 1}`} key={p.title}>
                 <span className="proj-tag">{p.tag}</span>
                 <h3>{p.title}</h3>
                 <p>{p.blurb}</p>
