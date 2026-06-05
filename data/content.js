@@ -26,8 +26,8 @@ export const profile = {
 
 // Add real links whenever you're ready. Leave as "" to hide a button.
 export const links = {
-  email: "",          // e.g. "rupinder88uiet@gmail.com"
-  linkedin: "",       // e.g. "https://www.linkedin.com/in/rupinderkkaur"
+  email: "rupinder88uiet@gmail.com",
+  linkedin: "https://www.linkedin.com/in/rupinderkkaur",
   github: "",         // e.g. "https://github.com/username"
   resume: "",         // e.g. "/resume.pdf"  (drop the file in /public)
 };

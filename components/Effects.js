@@ -61,26 +61,39 @@ export default function Effects() {
       });
     }
 
-    // ---- Cursor glow (pointer devices only) ----
-    let glow;
+    // ---- Trailing outline ring (pointer devices only) ----
+    let ring;
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     if (finePointer) {
-      glow = document.createElement("div");
-      glow.className = "cursor-glow";
-      document.body.appendChild(glow);
-      let rx = 0, ry = 0, x = 0, y = 0, raf;
+      ring = document.createElement("div");
+      ring.className = "cursor-ring";
+      document.body.appendChild(ring);
+      let rx = window.innerWidth / 2, ry = window.innerHeight / 2, x = rx, y = ry, raf;
       const onMove = (ev) => { rx = ev.clientX; ry = ev.clientY; };
       const loop = () => {
-        x += (rx - x) * 0.15; y += (ry - y) * 0.15;
-        glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+        x += (rx - x) * 0.18; y += (ry - y) * 0.18;
+        ring.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
         raf = requestAnimationFrame(loop);
       };
       window.addEventListener("mousemove", onMove);
       loop();
+
+      const hoverTargets = document.querySelectorAll("a, button, .g-card, .tilt");
+      const grow = () => ring.classList.add("is-hover");
+      const shrink = () => ring.classList.remove("is-hover");
+      hoverTargets.forEach((t) => {
+        t.addEventListener("mouseenter", grow);
+        t.addEventListener("mouseleave", shrink);
+      });
+
       var cleanupGlow = () => {
         window.removeEventListener("mousemove", onMove);
         cancelAnimationFrame(raf);
-        glow.remove();
+        hoverTargets.forEach((t) => {
+          t.removeEventListener("mouseenter", grow);
+          t.removeEventListener("mouseleave", shrink);
+        });
+        ring.remove();
       };
     }
 

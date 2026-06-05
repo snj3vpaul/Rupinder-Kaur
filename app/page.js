@@ -2,6 +2,7 @@ import { Icon } from "@/components/Icons";
 import Effects from "@/components/Effects";
 import Typewriter from "@/components/Typewriter";
 import Gallery from "@/components/Gallery";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   profile,
   links,
@@ -30,13 +31,16 @@ export default function Home() {
         <a href="#top" className="nav-logo">
           {profile.initials}<span className="dot">.</span>
         </a>
-        <div className="nav-links">
-          <a href="#about">About</a>
-          <a href="#kitchen">Kitchen</a>
-          <a href="#skills">Skills</a>
-          <a href="#experience">Experience</a>
-          <a href="#work">Work</a>
-          <a href="#contact">Contact</a>
+        <div className="nav-right">
+          <div className="nav-links">
+            <a href="#about">About</a>
+            <a href="#kitchen">Kitchen</a>
+            <a href="#skills">Skills</a>
+            <a href="#experience">Experience</a>
+            <a href="#work">Work</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <ThemeToggle />
         </div>
       </nav>
 
