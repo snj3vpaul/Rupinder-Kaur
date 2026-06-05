@@ -10,9 +10,18 @@ export const profile = {
   role: "Software Developer in Test",
   tagline: "Automation & Quality Engineering",
   location: "Ottawa, Canada",
+  // These cycle through the animated typewriter under her name.
+  roles: [
+    "Software Developer in Test",
+    "Automation Engineer",
+    "Quality Engineer",
+    "AI-Testing Explorer",
+  ],
   // A short, warm intro paragraph for the hero.
   intro:
     "I build and automate end-to-end test solutions that make software reliable, fast, and trustworthy — blending engineering precision with a designer's eye for detail.",
+  // A personal motto, shown as a large animated line. Edit freely.
+  motto: "Quality is not an act, it's a habit — built one test at a time.",
 };
 
 // Add real links whenever you're ready. Leave as "" to hide a button.
@@ -32,25 +41,47 @@ export const about = {
   ],
 };
 
-// Her creative life — what makes the work distinctly hers.
+// Her creative life — cooking leads, as her main passion.
 export const hobbies = [
+  {
+    icon: "pan",
+    title: "Fusion Cooking",
+    blurb:
+      "My main craft outside code. I make the best Indo-Chinese-Italian fusion — combining systems that 'shouldn't' work, until they do, beautifully.",
+  },
+  {
+    icon: "room",
+    title: "Interior Design",
+    blurb:
+      "Composing spaces with balance, color, and intention. Good architecture is good architecture — code or room.",
+  },
   {
     icon: "leaf",
     title: "Gardening",
     blurb:
       "Growing things slowly and patiently — the same discipline that makes a good test suite flourish.",
   },
+];
+
+// =====================================================================
+//  RECIPE GALLERY
+//  To add a dish: drop a photo into  public/recipes/  then add an
+//  entry below. Keep images ~1000px wide for fast loading.
+// =====================================================================
+export const recipes = [
   {
-    icon: "pan",
-    title: "Fusion Cooking",
+    img: "/recipes/noodle-chicken.jpg",
+    title: "Herb-Crusted Chicken Noodles",
+    cuisine: "Italian × Chinese",
     blurb:
-      "Making the best Indo-Chinese-Italian fusion. Combining systems that 'shouldn't' work — until they do beautifully.",
+      "Italian-herbed grilled chicken over wok-tossed noodles, finished with scallions and fresh coriander.",
   },
   {
-    icon: "room",
-    title: "Interior Design",
+    img: "/recipes/paneer-bowl.jpg",
+    title: "Masala Paneer Rice Bowl",
+    cuisine: "Indian",
     blurb:
-      "Composing spaces with balance, color, and intention. Good architecture is good architecture, code or room.",
+      "Spiced paneer masala with fluffy basmati, cooling yogurt, and crisp cucumber-and-carrot batons.",
   },
 ];
 
@@ -158,4 +189,19 @@ export const education = [
     degree: "B.E, Information Technology",
     period: "2015 — 2019",
   },
+];
+
+// Forward-looking "Currently exploring" strip.
+export const learning = [
+  "AI-powered Testing",
+  "Scalable Automation Frameworks",
+  "Modern Quality Engineering",
+];
+
+// Languages — shown with proficiency labels.
+export const languages = [
+  { name: "English", level: "Full Professional" },
+  { name: "Hindi", level: "Native / Bilingual" },
+  { name: "Punjabi", level: "Native / Bilingual" },
+  { name: "French", level: "Elementary" },
 ];
