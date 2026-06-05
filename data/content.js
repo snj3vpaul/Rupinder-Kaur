@@ -85,6 +85,17 @@ export const recipes = [
   },
 ];
 
+// =====================================================================
+//  QA STATS  (illustrative — edit the numbers to match her real figures)
+//  value = the number to count up to · suffix/prefix wrap it
+// =====================================================================
+export const stats = [
+  { value: 3, suffix: "+", label: "Years in Quality Engineering" },
+  { value: 1000, suffix: "+", label: "Test cases designed & executed" },
+  { value: 90, suffix: "%", label: "Automation coverage achieved" },
+  { value: 4, suffix: "", label: "Core / migration projects delivered" },
+];
+
 export const skills = [
   {
     group: "Automation & Testing",

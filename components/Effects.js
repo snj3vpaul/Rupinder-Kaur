@@ -22,6 +22,45 @@ export default function Effects() {
       .querySelectorAll(".reveal, .timeline, .motto")
       .forEach((el) => io.observe(el));
 
+    // ---- Count-up for stat numbers ----
+    const fmt = (n, prefix, suffix) =>
+      prefix + Math.round(n).toLocaleString() + suffix;
+    const nums = Array.from(document.querySelectorAll(".stat-num"));
+    if (reduce) {
+      nums.forEach((el) => {
+        el.textContent = fmt(
+          parseFloat(el.dataset.target),
+          el.dataset.prefix || "",
+          el.dataset.suffix || ""
+        );
+      });
+    } else {
+      const ioN = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const el = e.target;
+            const target = parseFloat(el.dataset.target);
+            const prefix = el.dataset.prefix || "";
+            const suffix = el.dataset.suffix || "";
+            const dur = 1400;
+            const start = performance.now();
+            const tick = (now) => {
+              const p = Math.min((now - start) / dur, 1);
+              const eased = 1 - Math.pow(1 - p, 3);
+              el.textContent = fmt(target * eased, prefix, suffix);
+              if (p < 1) requestAnimationFrame(tick);
+              else el.textContent = fmt(target, prefix, suffix);
+            };
+            requestAnimationFrame(tick);
+            ioN.unobserve(el);
+          });
+        },
+        { threshold: 0.5 }
+      );
+      nums.forEach((n) => ioN.observe(n));
+    }
+
     // ---- Scroll progress bar ----
     const bar = document.createElement("div");
     bar.className = "scroll-progress";

@@ -9,6 +9,7 @@ import {
   about,
   hobbies,
   skills,
+  stats,
   experience,
   projects,
   certifications,
@@ -34,10 +35,10 @@ export default function Home() {
         <div className="nav-right">
           <div className="nav-links">
             <a href="#about">About</a>
-            <a href="#kitchen">Kitchen</a>
+            <a href="#work">Work</a>
             <a href="#skills">Skills</a>
             <a href="#experience">Experience</a>
-            <a href="#work">Work</a>
+            <a href="#kitchen">Kitchen</a>
             <a href="#contact">Contact</a>
           </div>
           <ThemeToggle />
@@ -123,38 +124,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MOTTO BAND */}
-      <div className="motto">
+      {/* QA STATS */}
+      <section id="stats" className="stats-band">
         <div className="wrap">
-          <p className="quote">
-            <span className="mark">“</span>
-            {mottoWords.map((w, i) => (
-              <span
-                className="word"
-                key={i}
-                style={{ transitionDelay: `${i * 0.06}s` }}
-              >
-                {w}&nbsp;
-              </span>
-            ))}
-            <span className="mark">”</span>
-          </p>
-        </div>
-      </div>
-
-      {/* KITCHEN / RECIPE GALLERY */}
-      <section id="kitchen" className="kitchen">
-        <div className="wrap">
-          <span className="eyebrow reveal">Off the clock</span>
+          <span className="eyebrow reveal">By the numbers</span>
           <h2 className="section-title reveal d1">
-            In the <em>kitchen</em>
+            Quality, <em>quantified</em>
           </h2>
-          <p className="kitchen-intro reveal d2">
-            Cooking is my favourite kind of engineering — balancing flavours the
-            way I balance test coverage. Here&apos;s a taste of my Indo-Chinese-Italian
-            fusion. <span className="mono">(tap a dish)</span>
-          </p>
-          <Gallery recipes={recipes} />
+          <div className="stat-grid">
+            {stats.map((s, i) => (
+              <div className={`stat reveal d${(i % 4) + 1}`} key={s.label}>
+                <div
+                  className="stat-num"
+                  data-target={s.value}
+                  data-suffix={s.suffix || ""}
+                  data-prefix={s.prefix || ""}
+                >
+                  {s.prefix || ""}0{s.suffix || ""}
+                </div>
+                <div className="stat-label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROJECTS (showcased early) */}
+      <section id="work" className="projects">
+        <div className="wrap">
+          <span className="eyebrow reveal">Selected work</span>
+          <h2 className="section-title reveal d1">
+            Projects <em>showcase</em>
+          </h2>
+          <div className="proj-grid">
+            {projects.map((p, i) => (
+              <div className={`proj-card tilt reveal d${(i % 4) + 1}`} key={p.title}>
+                <span className="proj-tag">{p.tag}</span>
+                <h3>{p.title}</h3>
+                <p>{p.blurb}</p>
+                <div className="proj-stack">
+                  {p.stack.map((s) => (
+                    <span key={s}>{s}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -188,7 +203,40 @@ export default function Home() {
           </div>
         </div>
       </section>
+{/* MOTTO BAND */}
+      <div className="motto">
+        <div className="wrap">
+          <p className="quote">
+            <span className="mark">“</span>
+            {mottoWords.map((w, i) => (
+              <span
+                className="word"
+                key={i}
+                style={{ transitionDelay: `${i * 0.06}s` }}
+              >
+                {w}&nbsp;
+              </span>
+            ))}
+            <span className="mark">”</span>
+          </p>
+        </div>
+      </div>
 
+      {/* KITCHEN / RECIPE GALLERY */}
+      <section id="kitchen" className="kitchen">
+        <div className="wrap">
+          <span className="eyebrow reveal">Off the clock</span>
+          <h2 className="section-title reveal d1">
+            In the <em>kitchen</em>
+          </h2>
+          <p className="kitchen-intro reveal d2">
+            Cooking is my favourite kind of engineering — balancing flavours the
+            way I balance test coverage. Here&apos;s a taste of my Indo-Chinese-Italian
+            fusion. <span className="mono">(tap a dish)</span>
+          </p>
+          <Gallery recipes={recipes} />
+        </div>
+      </section>
       {/* EXPERIENCE */}
       <section id="experience">
         <div className="wrap">
@@ -222,31 +270,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROJECTS */}
-      <section id="work" className="projects">
-        <div className="wrap">
-          <span className="eyebrow reveal">Selected work</span>
-          <h2 className="section-title reveal d1">
-            Projects <em>showcase</em>
-          </h2>
-          <div className="proj-grid">
-            {projects.map((p, i) => (
-              <div className={`proj-card tilt reveal d${(i % 4) + 1}`} key={p.title}>
-                <span className="proj-tag">{p.tag}</span>
-                <h3>{p.title}</h3>
-                <p>{p.blurb}</p>
-                <div className="proj-stack">
-                  {p.stack.map((s) => (
-                    <span key={s}>{s}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
-      {/* EXTRAS */}
+      {/* CREDENTIALS */}
       <section id="extras">
         <div className="wrap">
           <div className="extras-grid">
