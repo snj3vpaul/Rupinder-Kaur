@@ -1,0 +1,34 @@
+import assert from "node:assert/strict";
+import { readFileSync, existsSync } from "node:fs";
+
+const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), "utf8");
+const page = read("app/page.js");
+const css = read("app/globals.css");
+const data = read("data/content.js");
+const layout = read("app/layout.js");
+const pkg = JSON.parse(read("package.json"));
+
+const ids = ["top", "main", "work", "expertise", "experience", "about", "contact"];
+for (const id of ids) assert.match(page, new RegExp(`id="${id}"`), `Missing section #${id}`);
+for (const href of ["#work", "#expertise", "#experience", "#about", "#contact"]) assert.ok(page.includes(href), `Missing href ${href}`);
+assert.match(page, /className="skip-link"/);
+assert.match(page, /<details className="mobile-nav">/);
+assert.match(page, /aria-label="Primary navigation"/);
+assert.match(page, /application\/ld\+json/);
+assert.match(page, /className="hero-masthead"/);
+assert.match(page, /className="method-grid"/);
+assert.ok(!page.includes('className="hero-art"'), "Boxed hero art should not return");
+assert.match(css, /\.method-note\s*\{/);
+assert.ok(!css.includes('.section-dark-card {'), "Skills should not have separate card backgrounds");
+assert.match(css, /prefers-reduced-motion: reduce/);
+assert.match(css, /:focus-visible/);
+assert.match(css, /@media \(max-width: 600px\)/);
+assert.match(layout, /metadataBase/);
+assert.match(layout, /canonical/);
+assert.ok(existsSync(new URL("../public/og-image.svg", import.meta.url)));
+assert.ok(existsSync(new URL("../public/favicon.svg", import.meta.url)));
+assert.ok(existsSync(new URL("../app/sitemap.js", import.meta.url)));
+assert.ok(!/Automation coverage achieved|Test cases designed & executed|illustrative — edit the numbers/i.test(data), "Unverified statistics must not be displayed");
+assert.ok(!/Effects|Typewriter|Gallery/.test(page), "Outdated visual effects should not be imported");
+assert.ok(pkg.scripts.build && pkg.scripts.check);
+console.log(`PASS: ${ids.length} section IDs, accessible navigation, SEO assets, motion settings and content checks.`);

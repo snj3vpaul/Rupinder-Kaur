@@ -1,44 +1,28 @@
-import { Fraunces, Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "900"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-mono",
-  display: "swap",
-});
+import { site } from "@/data/content";
 
 export const metadata = {
-  title: "Rupinder Kaur — SDET | Automation & Quality Engineering",
-  description:
-    "Portfolio of Rupinder Kaur, Software Developer in Test specializing in automation, quality engineering, and reliable software delivery.",
+  metadataBase: new URL(site.url),
+  title: { default: "Rupinder Kaur | Software Engineer in Test", template: "%s | Rupinder Kaur" },
+  description: "Rupinder Kaur is an Ottawa-based Software Engineer in Test working across test automation, performance, CI/CD and systems modernization.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website", locale: "en_CA", url: site.url,
+    title: "Rupinder Kaur — Quality Engineering, by design",
+    description: "Automation, performance and thoughtful testing for reliable software delivery.",
+    siteName: "Rupinder Kaur", images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "Rupinder Kaur — Quality Engineering" }]
+  },
+  twitter: { card: "summary_large_image", images: ["/og-image.svg"] },
+  robots: { index: true, follow: true },
+  icons: { icon: "/favicon.svg" }
 };
 
 export default function RootLayout({ children }) {
-  const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
+  const themeScript = `(function(){try{var stored=localStorage.getItem('rk-theme');var theme=stored==='dark'||stored==='light'?stored:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=theme}catch(e){document.documentElement.dataset.theme='light'}})()`;
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className={`${fraunces.variable} ${sora.variable} ${mono.variable}`}>
-        {children}
-      </body>
+      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
+      <body>{children}</body>
     </html>
   );
 }
