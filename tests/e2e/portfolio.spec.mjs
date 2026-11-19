@@ -1,8 +1,13 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-const SECTIONS = ["work", "expertise", "experience", "about", "contact"];
+const SECTIONS = ["expertise", "work", "experience", "about", "contact"];
 const isMobile = testInfo => testInfo.project.name === "mobile";
+
+// Behave like a returning visitor (intro already seen) unless a test opts in.
+test.beforeEach(async ({ page }, testInfo) => {
+  if (!testInfo.title.includes("[intro]")) await page.addInitScript(() => sessionStorage.setItem("rk-intro", "1"));
+});
 
 test.describe("health", () => {
   test("loads with no console errors and no failed requests", async ({ page }) => {
@@ -116,13 +121,90 @@ test.describe("interactions", () => {
     expect(text).toMatch(/@/);
   });
 
-  test("project details expand and collapse", async ({ page }) => {
+  test("case files open and close from the work cards", async ({ page }) => {
     await page.goto("/");
-    const details = page.locator(".project-details").first();
-    await details.locator("summary").click();
-    await expect(details.getByText("The challenge")).toBeVisible();
-    await details.locator("summary").click();
-    await expect(details.getByText("The challenge")).toBeHidden();
+    const toggle = page.locator(".work-toggle").first();
+    const detail = page.locator("#work-detail");
+    await expect(detail).toBeHidden();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(detail.getByText("The challenge")).toBeVisible();
+    await page.locator(".work-toggle").nth(2).click();
+    await expect(detail).toContainText("CASE FILE 03");
+    await page.locator(".work-toggle").nth(2).click();
+    await expect(detail).toBeHidden();
+  });
+
+  test("spot the bug: misses are counted, the odd toggle is found", async ({ page }) => {
+    await page.goto("/");
+    const game = page.locator(".bug-game");
+    await game.locator(".bug-toggle:not(.is-odd)").first().click();
+    await expect(game.locator(".bug-game-status")).toContainText("1 miss");
+    await game.locator(".bug-toggle.is-odd").click();
+    await expect(game.locator(".bug-game-status")).toContainText("Logged as RK-102");
+    await game.locator(".bug-reset").click();
+    await expect(game.locator(".bug-game-status")).toContainText("Click the one");
+  });
+
+  test("tool marquee moves and lists every tool for assistive tech", async ({ page }) => {
+    await page.goto("/");
+    await page.locator(".marquee").scrollIntoViewIfNeeded();
+    const track = page.locator(".marquee-track").first();
+    await expect.poll(() => track.evaluate(el => el.style.transform)).not.toBe("");
+    const a = await track.evaluate(el => el.style.transform);
+    await page.waitForTimeout(600);
+    const b = await track.evaluate(el => el.style.transform);
+    expect(a).not.toEqual(b);
+    await expect(page.locator(".marquee ul.visually-hidden li")).toHaveCount(15);
+  });
+
+  test("metrics count up and finish verified with a source", async ({ page }) => {
+    await page.goto("/");
+    await page.locator(".metrics").scrollIntoViewIfNeeded();
+    const cells = page.locator(".metric");
+    const n = await cells.count();
+    expect(n).toBeGreaterThan(0);
+    for (let i = 0; i < n; i++) {
+      await expect(cells.nth(i)).toHaveClass(/is-verified/, { timeout: 5000 });
+      await expect(cells.nth(i).locator(".metric-source")).toContainText("Verified ·");
+    }
+    await expect(cells.first().locator(".metric-value")).toHaveText("4+");
+  });
+});
+
+test.describe("intro and WebGL", () => {
+  test("[intro] loader plays once, then never blocks the page", async ({ page }) => {
+    await page.goto("/");
+    const loader = page.locator(".loader");
+    await expect(loader).toBeVisible();
+    await expect(loader).toBeHidden({ timeout: 5000 });
+    await page.locator(".bug-toggle").first().click(); // would fail if the loader intercepted clicks
+    await page.reload();
+    await expect(loader).toBeHidden();
+  });
+
+  test("hero scan renders WebGL or a labelled fallback", async ({ page }) => {
+    await page.goto("/");
+    const scan = page.locator(".hero-scan");
+    await expect(scan).toHaveClass(/is-(webgl|fallback)/, { timeout: 8000 });
+    if ((await scan.getAttribute("class")).includes("is-webgl")) {
+      await expect(scan.locator(".scan-pin.is-found").first()).toBeVisible({ timeout: 9000 });
+    } else {
+      await expect(scan.locator(".hero-scan-layers")).toBeVisible();
+    }
+    await expect(scan.locator(".visually-hidden")).toContainText("issues");
+  });
+
+  test("work graphics draw on every card", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("#work").scrollIntoViewIfNeeded();
+    const canvases = page.locator(".work-canvas");
+    await expect(canvases).toHaveCount(4);
+    for (const c of await canvases.all()) {
+      const box = await c.boundingBox();
+      expect(box.width).toBeGreaterThan(100);
+      expect(box.height).toBeGreaterThan(100);
+    }
   });
 });
 
@@ -134,6 +216,8 @@ test.describe("resilience", () => {
     for (const el of await page.locator(".reveal").all()) {
       await expect(el).toHaveCSS("opacity", "1");
     }
+    await expect(page.locator(".loader")).toBeHidden();
+    await expect(page.locator(".metric-value").first()).toHaveText("4+");
     await context.close();
   });
 
@@ -141,6 +225,7 @@ test.describe("resilience", () => {
     const context = await browser.newContext({ reducedMotion: "reduce" });
     const page = await context.newPage();
     await page.goto("/");
+    await expect(page.locator(".loader")).toBeHidden();
     await page.locator("#contact").scrollIntoViewIfNeeded();
     for (const el of await page.locator(".reveal").all()) {
       await expect(el).toHaveClass(/in-view/);

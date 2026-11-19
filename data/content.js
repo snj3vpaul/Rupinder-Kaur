@@ -95,3 +95,39 @@ export const outsideWork = [
 ];
 
 export const learning = ["AI-assisted testing", "Scalable test architecture", "Modern Quality Engineering"];
+
+/**
+ * Toolbelt for the scrolling tools section. Only tools already evidenced above.
+ * `kind` is the short label shown next to each tool.
+ */
+export const toolbelt = [
+  { name: "Playwright", kind: "E2E" },
+  { name: "Protractor", kind: "E2E" },
+  { name: "Postman", kind: "API" },
+  { name: "k6", kind: "PERF" },
+  { name: "JMeter", kind: "PERF" },
+  { name: "Azure DevOps", kind: "CI/CD" },
+  { name: "AWS", kind: "CLOUD" },
+  { name: "C#", kind: "LANG" },
+  { name: "JavaScript", kind: "LANG" },
+  { name: "Angular", kind: "UI" },
+  { name: "SQL", kind: "DATA" },
+  { name: "DB2", kind: "DATA" },
+  { name: "COBOL", kind: "LEGACY" },
+  { name: "CPU / Memory profiling", kind: "PERF" },
+  { name: "Agile / Scrum", kind: "TEAM" },
+];
+
+/**
+ * Metrics. RULE (enforced by tests/validate.mjs): every metric needs a `source`
+ * saying where the number can be checked. A metric whose value is null is not shown.
+ * Rupinder: fill in the null ones with real numbers and their source to publish them.
+ */
+export const metrics = [
+  { value: 4, suffix: "+", label: "Years in software testing", source: "Experience timeline, Dec 2021 to present" },
+  { value: 4, suffix: "", label: "Teams shipped quality for", source: "Experience timeline" },
+  { value: 15, suffix: "", label: "Tools in the toolkit", source: "Toolbelt list" },
+  { value: 5, suffix: "", label: "Certifications earned", source: "Certifications list" },
+  { value: null, suffix: "+", label: "Test cases authored", source: "" },
+  { value: null, suffix: "+", label: "Defects logged and verified", source: "" },
+];
