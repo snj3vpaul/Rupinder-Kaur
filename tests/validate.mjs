@@ -40,5 +40,20 @@ assert.match(css, /\.motion-ready \.reveal:not\(\.in-view\)/, "Reveal styles mus
 assert.match(css, /animation-iteration-count: 1 !important/, "Reduced motion must stop infinite animations");
 // Arrows (↗) promise navigation: only use them inside links.
 assert.ok(!/<span aria-hidden="true">↗<\/span><\/(li|span)>/.test(page), "Decorative ↗ on a non-link");
+// v3: loader, WebGL and metrics rules.
+const { metrics, toolbelt } = await import("../data/content.js");
+for (const m of metrics) {
+  if (m.value !== null) assert.ok(m.source && m.source.trim().length > 3, `Metric "${m.label}" has a value but no source`);
+}
+assert.ok(metrics.some(m => m.value !== null), "At least one verified metric should be published");
+assert.match(css, /\.loader \{ display: none; \}/, "Loader must be hidden unless JS opts in");
+assert.match(css, /\.js\.intro \.loader/, "Loader must only show under .js.intro");
+assert.match(layout, /prefers-reduced-motion: reduce[^"]*intro-done/, "Reduced-motion visitors must skip the intro");
+const heroScan = read("components/HeroScan.js");
+assert.ok(!/from "three"/.test(page + heroScan), "three.js must be imported dynamically, never in the main bundle");
+assert.match(heroScan, /import\("three"\)/);
+assert.match(heroScan, /visually-hidden/, "WebGL scene needs a text alternative");
+assert.match(heroScan, /setMode\("fallback"\)/, "WebGL scene needs a no-WebGL fallback");
+assert.ok(toolbelt.length >= 8, "Toolbelt should list the evidenced tools");
 assert.ok(pkg.scripts.build && pkg.scripts.check && pkg.scripts["test:e2e"], "Missing build / check / test:e2e scripts");
 console.log(`PASS: ${ids.length} section IDs, accessible navigation, SEO assets, motion settings and content checks.`);

@@ -38,6 +38,16 @@ export default function Motion() {
     reveals.forEach(el => { if (!el.classList.contains("in-view")) io.observe(el); });
     cleanups.push(() => io.disconnect());
 
+    // ---- Test-run sections replay when they first come into view ----
+    if (!reduce) document.querySelectorAll("[data-run-on-view]").forEach(el => {
+      const o = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        el.classList.remove("is-running"); void el.offsetWidth; el.classList.add("is-running");
+        o.disconnect();
+      }, { threshold: 0.3 });
+      o.observe(el); cleanups.push(() => o.disconnect());
+    });
+
     // ---- Scroll progress, scrollspy, timeline ----
     const bar = document.querySelector(".scroll-progress");
     const timeline = document.querySelector(".timeline");
